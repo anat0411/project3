@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import contextLoginAdmin from "../../contexts/contextLoginAdmin";
 
-function AddVacations() {
+// import "./AddVacation.css";
+
+function AddVacationAdmin() {
   const [form, setForm] = useState({
     destination: "",
     description: "",
@@ -32,8 +33,14 @@ function AddVacations() {
       body: JSON.stringify(form),
     });
 
+    console.log(form);
     const resJson = await res.json();
     console.log(resJson);
+    if (resJson) {
+      history.push("/vacations/admin");
+    } else {
+      alert("Somthing went wrong... Check your data");
+    }
   };
 
   const handleVerify = async () => {
@@ -55,10 +62,10 @@ function AddVacations() {
   }, []);
 
   return (
-    <div>
-      <h1>Add Vacation</h1>
+    <div className="container">
+      <h1 className="mt-3 mb-3">Add Vacation</h1>
       <form action="/add/vacation" method="POST" onSubmit={handleSubmit}>
-        <div>
+        <div className="mt-1 mb-1">
           <label htmlFor="destination">destination </label>
           <input
             type="text"
@@ -69,9 +76,10 @@ function AddVacations() {
             onChange={handleForm}
           />
         </div>
-        <div>
+        <div className="mt-1 mb-1">
           <label htmlFor="description">description </label>
           <input
+            className="description"
             type="text"
             id="description"
             name="description"
@@ -80,7 +88,7 @@ function AddVacations() {
             onChange={handleForm}
           />
         </div>
-        <div>
+        <div className="mt-1 mb-1">
           <label htmlFor="username">From Date </label>
           <input
             type="date"
@@ -91,7 +99,7 @@ function AddVacations() {
             onChange={handleForm}
           />
         </div>
-        <div>
+        <div className="mt-1 mb-1">
           <label htmlFor="toDate">To Date </label>
           <input
             type="date"
@@ -102,7 +110,7 @@ function AddVacations() {
             onChange={handleForm}
           />
         </div>
-        <div>
+        <div className="mt-1 mb-1">
           <label htmlFor="price">Price </label>
           <input
             type="number"
@@ -113,7 +121,7 @@ function AddVacations() {
             onChange={handleForm}
           />
         </div>
-        <div>
+        <div className="mt-1 mb-1">
           <label htmlFor="followersNum">Folowers Number </label>
           <input
             type="number"
@@ -124,9 +132,10 @@ function AddVacations() {
             onChange={handleForm}
           />
         </div>
-        <div>
+        <div className="mt-1 mb-1">
           <label htmlFor="image">Image </label>
           <input
+            className="btn btn-outline-dark"
             type="file"
             id="image"
             name="image"
@@ -136,10 +145,10 @@ function AddVacations() {
             onChange={handleForm}
           />
         </div>
-        <button>Submit</button>
+        <button className="btn btn-success mt-3 mb-3">Submit</button>
       </form>
     </div>
   );
 }
 
-export default AddVacations;
+export default AddVacationAdmin;

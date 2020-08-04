@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
 import RenderVacation from "./RenderVacation";
 import { useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
-import contextLoginAdmin from "../../contexts/contextLoginAdmin";
+import Footer from "../../footer/Footer";
+import "./Vacation.css";
 
-function VacationsAdmin() {
+function Vacations() {
   const [vacations, setVacations] = useState([]);
 
   const history = useHistory();
 
   const getVacations = async () => {
-    const res = await fetch("http://localhost:3001/vacations/admin", {
+    const res = await fetch("http://localhost:3001/vacations", {
       method: "GET",
       mode: "cors",
       credentials: "include",
     });
 
     if (res.status === 403) {
-      history.push("/login/admin");
+      history.push("/login");
     } else {
       const resJson = await res.json();
       console.log(resJson);
       setVacations(resJson);
+      console.log(vacations);
     }
   };
 
@@ -31,16 +32,13 @@ function VacationsAdmin() {
 
   console.log(vacations);
   return (
-    <div className="container">
-      <h1>Vacations Admin</h1>
-      <div className="">
-        <Link to="/add/vacation">Add Vacation</Link>
-      </div>
-      <div key={vacations.id}>
-        <RenderVacation key={vacations.id} data={vacations} />
+    <div key={vacations.id}>
+      <RenderVacation key={vacations.id} data={vacations} />
+      <div className="footer">
+        <Footer />
       </div>
     </div>
   );
 }
 
-export default VacationsAdmin;
+export default Vacations;

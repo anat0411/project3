@@ -63,6 +63,18 @@ app.route("/vacations").get(isAuth, (req, res) => {
   });
 });
 
+app.route("/get/vacation/edit/:id").get(isAdminAuth, (req, res) => {
+  const id = req.params.id;
+  pool.query(
+    `SELECT * FROM vacations WHERE id=?`,
+    [id],
+    (err, results, fields) => {
+      if (err) throw err;
+      res.json(results);
+    }
+  );
+});
+
 app.route("/vacations/admin").get(isAdminAuth, (req, res) => {
   pool.query(`SELECT * FROM vacations`, (err, results, fields) => {
     if (err) throw err;
@@ -238,7 +250,72 @@ app.route("/add/vacation").post((req, res) => {
     (err, results) => {
       if (err) throw err;
       console.log(req.body);
-      if (results.length) {
+      console.log(results.length);
+      if (results) {
+        res.json({ success: true });
+      } else {
+        res.json({ success: false });
+      }
+    }
+  );
+});
+
+app.route("/delete/vacation/:id").delete((req, res) => {
+  const id = req.params.id;
+  pool.query(`DELETE FROM vacations WHERE id=?`, id, (err, results) => {
+    if (err) throw err;
+    console.log(req.params.id);
+    console.log(results);
+    if (results) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
+  });
+});
+
+app.route("/edit/vacation/:id").put((req, res) => {
+  const {
+    destination,
+    description,
+    fromDate,
+    toDate,
+    price,
+    followersNum,
+    image,
+  } = req.body;
+  const id = req.params.id;
+  if (
+    !destination ||
+    !description ||
+    !fromDate ||
+    !toDate ||
+    !price ||
+    !followersNum ||
+    !image
+  ) {
+    return res.json({ success: false, msg: "Missing fields" });
+  }
+
+  pool.query(
+    `
+    UPDATE project_vacation.vacations SET destination=? ,description=? ,fromDate=? ,toDate=? ,price=? ,followersNumber=?, image=? WHERE id=?
+        `,
+    [
+      destination,
+      description,
+      fromDate,
+      toDate,
+      price,
+      followersNum,
+      image,
+      id,
+    ],
+    (err, results) => {
+      if (err) throw err;
+      console.log(req.body);
+      console.log(results.length);
+      if (results) {
         res.json({ success: true });
       } else {
         res.json({ success: false });

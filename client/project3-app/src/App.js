@@ -7,9 +7,10 @@ import Login from "./components/login/Login";
 import LoginAdmin from "./components/login/LoginAdmin";
 import Register from "./components/register/Register";
 import RegisterAdmin from "./components/register/RegisterAdmin";
-import Vacations from "./components/vacations/Vacation";
-import VacationsAdmin from "./components/vacations/VacationsAdmin";
-import AddVacation from "./components/vacations/AddVacation";
+import Vacations from "./components/vacations/VacationsDisplay/Vacations";
+import VacationsAdmin from "./components/vacations/VacationsDisplay/VacationsAdmin";
+import AddVacationAdmin from "./components/vacations/VacationsEdits/AddVacationAdmin";
+import EditVacationAdmin from "./components/vacations/VacationsEdits/EditVacationAdmin";
 
 function App() {
   return (
@@ -37,8 +38,11 @@ function App() {
           <Route path="/vacations/admin">
             <VacationsAdmin />
           </Route>
-          <Route path="/add/vacation">
-            <AddVacation />
+          <Route exact path="/add/vacation">
+            <AddVacationAdmin />
+          </Route>
+          <Route exact path="/edit/vacation/:id">
+            <EditVacationAdmin />
           </Route>
         </Switch>
       </Router>
