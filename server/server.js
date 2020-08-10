@@ -56,9 +56,8 @@ app.route("/auth/admin/verify").get(isAdminAuth, (req, res) => {
 });
 
 app.route("/vacations").get(isAuth, (req, res) => {
-  pool.query(`SELECT * FROM vacations`, (err, results, fields) => {
+  pool.query(`SELECT * FROM vacations`, [], (err, results, fields) => {
     if (err) throw err;
-    console.log(req.session.user);
     res.json(results);
   });
 });
@@ -70,6 +69,7 @@ app.route("/get/vacation/edit/:id").get(isAdminAuth, (req, res) => {
     [id],
     (err, results, fields) => {
       if (err) throw err;
+      console.log(results);
       res.json(results);
     }
   );
@@ -116,6 +116,19 @@ app.route("/login").post((req, res) => {
       } else {
         res.json({ success: false });
       }
+    }
+  );
+});
+
+app.route("/login/:username").get(isAuth, (req, res) => {
+  let username = req.params.username;
+
+  pool.query(
+    `SELECT fName, lName FROM users WHERE username=?`,
+    [username],
+    (err, results, fields) => {
+      if (err) throw err;
+      res.json(results);
     }
   );
 });

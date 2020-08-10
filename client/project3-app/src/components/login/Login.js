@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import contextLogin from "../../contexts/contextLogin";
+import contextUserInfo from "../../contexts/contextUserInfo";
+import Vacations from "../vacations/VacationsDisplay/Vacations";
 
 function Login() {
   const [form, setForm] = useState({
@@ -9,11 +11,12 @@ function Login() {
   });
 
   let { login } = useContext(contextLogin);
+  let { userName, updateUser } = useContext(contextUserInfo);
 
   useEffect(() => {
     console.log(login);
     if (login) {
-      history.push("/vacations");
+      history.push(`/vacations`);
     }
   }, [login]);
 
@@ -36,14 +39,16 @@ function Login() {
       body: JSON.stringify(form),
     });
 
+    updateUser(form.username);
+
     const data = await res.json();
     console.log(data);
 
     if (data.success) {
       login = true;
       console.log(login);
-      alert("Welcome!");
-      history.push("/vacations");
+      // alert("Welcome!");
+      history.push(`vacations`);
     }
   };
 
@@ -68,6 +73,7 @@ function Login() {
   return (
     <div>
       <h1>Login</h1>
+
       <form action="/login" method="POST" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">User Name </label>

@@ -11,7 +11,11 @@ export default class RenderVacation extends Component {
       toDate,
       image,
     }) => (
-      <div className="card col-md-4 mt-1 mb-1" style={{ width: "18rem" }}>
+      <div
+        key={id}
+        className="card col-md-4 mt-1 mb-1"
+        style={{ width: "18rem" }}
+      >
         <img className="card-img-top" src={image} alt="card image cap" />
         <div className="card-body">
           <h4 className="card-title">{destination}</h4>
@@ -29,7 +33,6 @@ export default class RenderVacation extends Component {
       </div>
     );
 
-    console.log(this.props.data);
     const vacations = this.props.data;
     return (
       <div>

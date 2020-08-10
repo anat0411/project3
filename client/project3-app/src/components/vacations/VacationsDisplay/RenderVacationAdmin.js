@@ -30,7 +30,11 @@ export default class RenderVacationAdmin extends Component {
     }) => (
       (url = `/edit/vacation/${id}`),
       (
-        <div className="card col-md-4 mt-1 mb-1" style={{ width: "18rem" }}>
+        <div
+          key={id}
+          className="card col-md-4 mt-1 mb-1"
+          style={{ width: "18rem" }}
+        >
           <div className="row">
             <div className="col-md-1"></div>
             <button

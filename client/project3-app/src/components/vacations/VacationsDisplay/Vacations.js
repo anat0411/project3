@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import RenderVacation from "./RenderVacation";
 import { useHistory } from "react-router-dom";
 import Footer from "../../footer/Footer";
+import contextUserInfo from "../../../contexts/contextUserInfo";
 import "./Vacation.css";
 
 function Vacations() {
   const [vacations, setVacations] = useState([]);
+  const [info, setInfo] = useState([
+    {
+      fName: "",
+      lName: "",
+    },
+  ]);
+
+  const contextInfo = useContext(contextUserInfo);
 
   const history = useHistory();
 
@@ -20,20 +29,40 @@ function Vacations() {
       history.push("/login");
     } else {
       const resJson = await res.json();
-      console.log(resJson);
       setVacations(resJson);
-      console.log(vacations);
+    }
+  };
+
+  const getInfo = async () => {
+    const url = `http://localhost:3001/login/${contextInfo.userName}`;
+    const res = await fetch(url, {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    setInfo(data);
+  };
+
+  const renderInfo = ({ fName, lName }) => {
+    const text = `Hello ${fName} ${lName}! You have just connected `;
+    if (fName.length > 1) {
+      return <p key={fName}>{text}</p>;
     }
   };
 
   useEffect(() => {
     getVacations();
+    getInfo();
   }, []);
 
-  console.log(vacations);
   return (
-    <div key={vacations.id}>
-      <RenderVacation key={vacations.id} data={vacations} />
+    <div className="container">
+      <div>{info.map(renderInfo)}</div>
+      <div key={vacations.id}>
+        <RenderVacation key={vacations.id} data={vacations} />
+      </div>
       <div className="footer">
         <Footer />
       </div>
