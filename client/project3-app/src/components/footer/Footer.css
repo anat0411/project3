@@ -1,0 +1,35 @@
+.footerText {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.topFooter {
+  background-color: #e6faff;
+}
+
+.copyrightText {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.titleAbout {
+  font-weight: 700;
+}
+
+.textAbout {
+  font-size: 13px;
+}
+
+.textContact {
+  font-size: 13px;
+}
+
+.contactMedia {
+  font-size: 15px;
+}
+
+a:link,
+a:visited {
+  color: black;
+}

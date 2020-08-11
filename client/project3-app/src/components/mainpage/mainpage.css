@@ -28,12 +28,6 @@
   margin-right: 180px;
 }
 
-.footer {
-  position: fixed;
-  background-color: lightyellow;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  color: white;
-  text-align: center;
+.footerText {
+  max-width: auto !important;
 }

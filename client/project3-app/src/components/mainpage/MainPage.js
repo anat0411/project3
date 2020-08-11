@@ -27,7 +27,7 @@ const MainPage = () => {
             <Link to="/register">Register</Link>
           </div>
         </div>
-        <div className="footer">
+        <div className="footerText">
           <Footer />
         </div>
       </div>
