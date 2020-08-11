@@ -52,6 +52,24 @@ function Vacations() {
     }
   };
 
+  const logoutUser = async () => {
+    const res = await fetch("http://localhost:3001/logout", {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+    });
+
+    console.log("LOGOUT");
+
+    const { success } = await res.json();
+    if (success) {
+      alert("You have signed out!");
+      history.push("/login");
+    } else {
+      alert("Somthing went wrong...");
+    }
+  };
+
   useEffect(() => {
     getVacations();
     getInfo();
@@ -60,6 +78,11 @@ function Vacations() {
   return (
     <div className="container">
       <div>{info.map(renderInfo)}</div>
+      <div className="row">
+        <div onClick={logoutUser} className="col-md-2 btn btn-primary">
+          Logout
+        </div>
+      </div>
       <div key={vacations.id}>
         <RenderVacation key={vacations.id} data={vacations} />
       </div>

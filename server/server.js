@@ -163,6 +163,15 @@ app.route("/register").post((req, res) => {
   });
 });
 
+app.get("/logout", isAuth, (req, res) => {
+  if (req.session) {
+    req.session.destroy();
+    res.json({ success: true });
+  } else {
+    res.json({ success: false });
+  }
+});
+
 //only necessary if you want to register a new admin
 app.route("/register/admin").post((req, res) => {
   const { fname, lname, username, password } = req.body;
