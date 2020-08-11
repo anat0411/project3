@@ -7,19 +7,6 @@ import "./Footer.css";
 
 const Footer = () => {
   return (
-    // <div className="containerForText footerText container">
-    //   <div className="row ">
-    //     <div>Call</div>
-    //     <div>
-    //       Address
-    //       {/* <FontAwesomeIcon icon={faPlus} /> */}
-    //     </div>
-    //     <div>Email</div>
-    //   </div>
-    //   <hr />
-    //
-    //   </div>
-    // </div>
     <footer className="page-footer pt-1 footerText topFooter">
       <div className="container-fluid text-center text-md-left">
         <div className="row">
@@ -34,7 +21,7 @@ const Footer = () => {
               the water!
             </p>
           </div>
-          {/* <hr className="clearfix w-100 d-md-none" /> */}
+          <hr className="clearfix w-100 d-md-none" />
           <div className="col-md-2">
             <ul className="list-unstyled">
               <li>
