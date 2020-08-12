@@ -24,11 +24,11 @@ function Vacations() {
       mode: "cors",
       credentials: "include",
     });
-
     if (res.status === 403) {
       history.push("/login");
     } else {
       const resJson = await res.json();
+      console.log(resJson);
       setVacations(resJson);
     }
   };

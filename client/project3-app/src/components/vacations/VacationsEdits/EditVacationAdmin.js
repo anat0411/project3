@@ -65,7 +65,12 @@ function EditVacationAdmin() {
             </div>
           </div>
           <div className="row">
-            <form action="/add/vacation" method="PUT" onSubmit={handleSubmit}>
+            <form
+              action="/add/vacation"
+              method="PUT"
+              onSubmit={handleSubmit}
+              encType="multupart/form-data"
+            >
               <div className="mt-1 mb-1">
                 <label htmlFor="destination">destination </label>
                 <input

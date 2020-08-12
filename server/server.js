@@ -1,12 +1,30 @@
 const express = require("express");
 const cors = require("cors");
-// const path = require("path");
 const { pool } = require("./dbConnection");
 const session = require("express-session");
-// const passport = require("passport");
 const port = process.env.PORT || 3001;
 const app = express();
 const bcrypt = require("bcrypt");
+const multer = require("multer");
+const { v4: uuid4 } = require("uuid");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destionation: "./uploads",
+  filename: (req, file, cb) => {
+    console.log(file);
+    const ext = path.extname(file.originalname);
+
+    if (![".svg", ".png", ".jpeg", ".jpg"].includes(ext)) {
+      return cb(new Error("Ext disalowed"));
+    }
+
+    cb(null, uuid4() + ext);
+  },
+});
+const upload = multer({ storage: storage });
+app.use("/", express.static("../client/bulid"));
+app.use("/uploads", express.static("uploads"));
 
 app.use(
   cors({
@@ -241,39 +259,51 @@ app.route("/login/admin").post((req, res) => {
 });
 
 //cheking if verified on client
-app.route("/add/vacation").post((req, res) => {
+app.route("/add/vacation").post(upload.single("image"), (req, res) => {
+  console.log(" --------- req.body: ", req.body);
+  console.log(" --------- req.file: ", req.file);
+  // console.log(" --------- req: ", req);
   const {
     destination,
     description,
     fromDate,
     toDate,
     price,
-    followersNum,
-    image,
+    followersNumber,
   } = req.body;
+  const image = req.file;
   if (
     !destination ||
     !description ||
     !fromDate ||
     !toDate ||
     !price ||
-    !followersNum ||
+    !followersNumber ||
     !image
   ) {
-    return res.json({ success: false, msg: "Missing fields" });
+    console.log(req.body);
+    return res.json({ success: false, msg: "Missing fields 1" });
   }
 
   pool.query(
     `
-    INSERT vacations (destination, description, fromDate, toDate, price, followersNumber,image)
+    INSERT vacations (destination, description, fromDate, toDate, price, followersNumber ,image)
     Values(?,?,?,?,?,?,?)
         `,
-    [destination, description, fromDate, toDate, price, followersNum, image],
+    [
+      destination,
+      description,
+      fromDate,
+      toDate,
+      price,
+      followersNumber,
+      image.path,
+    ],
     (err, results) => {
       if (err) throw err;
-      console.log(req.body);
-      console.log(results.length);
       if (results) {
+        console.log(req.body);
+        console.log(req.file);
         res.json({ success: true });
       } else {
         res.json({ success: false });

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 
 // import "./AddVacation.css";
@@ -10,10 +10,11 @@ function AddVacationAdmin() {
     fromDate: "",
     toDate: "",
     price: "",
-    followersNum: "",
+    followersNumber: 0,
     image: "",
   });
 
+  const fileInputRef = useRef();
   const history = useHistory();
 
   const handleForm = (e) => {
@@ -23,23 +24,36 @@ function AddVacationAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:3001/add/vacation", {
-      method: "POST",
-      mode: "cors",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    const files = fileInputRef.current.files;
 
-    console.log(form);
-    const resJson = await res.json();
-    console.log(resJson);
-    if (resJson) {
-      history.push("/vacations/admin");
-    } else {
-      alert("Somthing went wrong... Check your data");
+    console.log(files[0]);
+    console.log(form.toDate);
+    console.log("FORM ", JSON.stringify(form));
+    const formData = new FormData();
+    formData.append("destination", form.destination);
+    formData.append("description", form.description);
+    formData.append("fromDate", form.fromDate);
+    formData.append("toDate", form.toDate);
+    formData.append("price", form.price);
+    formData.append("followersNumber", form.followersNumber);
+    formData.append("image", files[0]);
+
+    if (files.length > 0) {
+      console.log("form: ", JSON.stringify(form));
+      const res = await fetch("http://localhost:3001/add/vacation", {
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
+        body: formData,
+      });
+      const resJson = await res.json();
+      console.log(resJson);
+      if (resJson.success === true) {
+        alert("Vacation added!");
+        history.push("/vacations/admin");
+      } else {
+        alert("Somthing went wrong... Check your data");
+      }
     }
   };
 
@@ -64,7 +78,12 @@ function AddVacationAdmin() {
   return (
     <div className="container">
       <h1 className="mt-3 mb-3">Add Vacation</h1>
-      <form action="/add/vacation" method="POST" onSubmit={handleSubmit}>
+      <form
+        action="/add/vacation"
+        method="POST"
+        onSubmit={handleSubmit}
+        encType="multupart/form-data"
+      >
         <div className="mt-1 mb-1">
           <label htmlFor="destination">destination </label>
           <input
@@ -125,10 +144,10 @@ function AddVacationAdmin() {
           <label htmlFor="followersNum">Folowers Number </label>
           <input
             type="number"
-            id="followersNum"
-            name="followersNum"
+            id="followersNumber"
+            name="followersNumber"
             required
-            value={form.followersNum}
+            value={form.followersNumber}
             onChange={handleForm}
           />
         </div>
@@ -139,9 +158,8 @@ function AddVacationAdmin() {
             type="file"
             id="image"
             name="image"
-            accept="image/*"
             required
-            value={form.image}
+            ref={fileInputRef}
             onChange={handleForm}
           />
         </div>
