@@ -10,10 +10,12 @@ const { v4: uuid4 } = require("uuid");
 const path = require("path");
 
 const storage = multer.diskStorage({
-  destionation: "./uploads",
+  destination: "./uploads",
   filename: (req, file, cb) => {
     console.log(file);
     const ext = path.extname(file.originalname);
+    //string
+    //destination----- not uploads?
 
     if (![".svg", ".png", ".jpeg", ".jpg"].includes(ext)) {
       return cb(new Error("Ext disalowed"));
