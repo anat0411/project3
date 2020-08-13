@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useReducer } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import RenderVacation from "../VacationsDisplay/RenderVacation";
+import config from "../../../config";
 
 function EditVacationAdmin() {
   const [vacation, setVacation] = useState(undefined);
 
   const { id } = useParams();
   const history = useHistory();
+  const fileInputRef = useRef();
 
   const getVacation = async () => {
     const res = await fetch(`http://localhost:3001/get/vacation/edit/${id}`, {
@@ -31,18 +33,29 @@ function EditVacationAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const files = fileInputRef.current.files;
+
+    const formData = new FormData();
+    formData.append("destination", vacation.destination);
+    formData.append("description", vacation.description);
+    formData.append("fromDate", vacation.fromDate);
+    formData.append("toDate", vacation.toDate);
+    formData.append("price", vacation.price);
+    formData.append("followersNumber", vacation.followersNumber);
+    if (files[0]) {
+      formData.append("image", files[0]);
+    }
+
     const res = await fetch(`http://localhost:3001/edit/vacation/${id}`, {
       method: "PUT",
       mode: "cors",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(vacation),
+      body: formData,
     });
 
     const resJson = await res.json();
     console.log(resJson);
+    console.log(vacation);
     if (resJson) {
       history.push("/vacations/admin");
     } else {
@@ -138,19 +151,18 @@ function EditVacationAdmin() {
                   onChange={handleForm}
                 />
               </div>
-              {/* <div className="mt-1 mb-1">
-                <label htmlFor="image">Image </label>
+              <div className="mt-1 mb-1">
+                <label htmlFor="image">IF BBBBB </label>
                 <input
                   className="btn btn-outline-dark"
                   type="file"
                   id="image"
                   name="image"
-                  accept="image/*"
-                  required
-                  value={vacation.image}
+                  ref={fileInputRef}
                   onChange={handleForm}
                 />
-              </div> */}
+                <img src={config.general.SERVER_URL + "/" + vacation.image} />
+              </div>
               <button className="btn btn-success mt-3 mb-3">Submit</button>
             </form>
           </div>

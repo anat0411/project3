@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React, { Component, Redirect } from "react";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
+import config from "../../../config";
 
 export default class RenderVacationAdmin extends Component {
   render() {
@@ -12,9 +13,10 @@ export default class RenderVacationAdmin extends Component {
         mode: "cors",
         credentials: "include",
       });
+      console.log(res);
       if (res.status === 200) {
         alert("Vacation Deleted!");
-        // history.push('/vacations/admin')
+        // history.push("/vacations/admin");
       }
     };
 
@@ -57,7 +59,11 @@ export default class RenderVacationAdmin extends Component {
               Vacation ID: {id}
             </div>
           </div>
-          <img className="card-img-top" src={image} alt="card image cap" />
+          <img
+            className="card-img-top"
+            src={`${config.general.SERVER_URL}/${image}`}
+            alt="card image cap"
+          />
           <div className="card-body">
             <h4 className="card-title">{destination}</h4>
             <p className="card-text">{description}</p>

@@ -284,7 +284,7 @@ app.route("/add/vacation").post(upload.single("image"), (req, res) => {
     !image
   ) {
     console.log(req.body);
-    return res.json({ success: false, msg: "Missing fields 1" });
+    return res.json({ success: false, msg: "Missing fields ADD VACATION" });
   }
 
   pool.query(
@@ -322,60 +322,91 @@ app.route("/delete/vacation/:id").delete((req, res) => {
     console.log(results);
     if (results) {
       res.json({ success: true });
+      res.redirect("/vacations/admin");
     } else {
       res.json({ success: false });
     }
   });
 });
 
-app.route("/edit/vacation/:id").put((req, res) => {
+app.route("/edit/vacation/:id").put(upload.single("image"), (req, res) => {
+  console.log("REQ------------- ", req.body);
   const {
     destination,
     description,
     fromDate,
     toDate,
     price,
-    followersNum,
-    image,
+    followersNumber,
   } = req.body;
   const id = req.params.id;
+  const image = req.file;
+
+  console.log(
+    destination,
+    description,
+    fromDate,
+    toDate,
+    price,
+    followersNumber
+  );
+
   if (
     !destination ||
     !description ||
     !fromDate ||
     !toDate ||
     !price ||
-    !followersNum ||
-    !image
+    followersNumber === undefined
   ) {
-    return res.json({ success: false, msg: "Missing fields" });
+    return res.json({ success: false, msg: "Missing fields EDIT VACATION" });
   }
+  if (image) {
+    pool.query(
+      `
+      UPDATE vacations SET destination=? ,description=? ,fromDate=? ,toDate=? ,price=? ,followersNumber=?, image=? WHERE id=?
+      `,
+      [
+        destination,
+        description,
+        fromDate,
+        toDate,
+        price,
+        followersNumber,
+        image.path,
+        id,
+      ],
+      (err, results) => {
+        if (err) throw err;
+        console.log("req ", req.body);
+        console.log("UN---------", results);
 
-  pool.query(
-    `
-    UPDATE project_vacation.vacations SET destination=? ,description=? ,fromDate=? ,toDate=? ,price=? ,followersNumber=?, image=? WHERE id=?
-        `,
-    [
-      destination,
-      description,
-      fromDate,
-      toDate,
-      price,
-      followersNum,
-      image,
-      id,
-    ],
-    (err, results) => {
-      if (err) throw err;
-      console.log(req.body);
-      console.log(results.length);
-      if (results) {
-        res.json({ success: true });
-      } else {
-        res.json({ success: false });
+        if (results) {
+          res.json({ success: true });
+        } else {
+          res.json({ success: false });
+        }
       }
-    }
-  );
+    );
+  } else {
+    pool.query(
+      `
+      UPDATE vacations SET destination=? ,description=? ,fromDate=? ,toDate=? ,price=? ,followersNumber=? WHERE id=?
+      `,
+      [destination, description, fromDate, toDate, price, followersNumber, id],
+      (err, results) => {
+        if (err) throw err;
+        console.log("req ", req.body);
+        console.log("UN---------", results);
+
+        if (results) {
+          res.json({ success: true });
+        } else {
+          res.json({ success: false });
+        }
+      }
+    );
+  }
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
