@@ -5,6 +5,9 @@ import Footer from "../footer/Footer";
 import imgMaldives from "./maldives.jpg";
 import imgThailand from "./thailand.jpg";
 import imgThailand2 from "./thailand2.jpg";
+import imgVenice from "./Venice.jpg";
+import imgSanLucas from "./SanLucas.jpg";
+import imgIbiza from "./Ibiza.jpg";
 
 const MainPage = () => {
   return (
@@ -23,25 +26,43 @@ const MainPage = () => {
           of special vacations on the water
         </p>
         <div className="row">
-          <div className="col-md-4 mb-3">
-            <img className="maldivesImg mb-3" src={imgMaldives} />
+          <div className="col-md-4 mb-3 wrapperImage">
+            <img className="image mb-3" src={imgMaldives} />
+            <div className="wrapperTextHover">
+              <div className="textHover">Maldives</div>
+            </div>
           </div>
-          <div className="col-md-4">
-            <img className="maldivesImg mb-3" src={imgThailand} />
+          <div className="col-md-4 mb-3 wrapperImage">
+            <img className="image mb-3" src={imgThailand} />
+            <div className="wrapperTextHover">
+              <div className="textHover">Thailand</div>
+            </div>
           </div>
-          <div className="col-md-4">
-            <img className="maldivesImg mb-3" src={imgThailand2} />
+          <div className="col-md-4 mb-3 wrapperImage">
+            <img className="image mb-3" src={imgVenice} />
+            <div className="wrapperTextHover">
+              <div className="textHover">Venice</div>
+            </div>
           </div>
         </div>
         <div className="row">
-          <div className="col-md-4 mb-3">
-            <img className="maldivesImg mb-3" src={imgMaldives} />
+          <div className="col-md-4 mb-3 wrapperImage">
+            <img className="image mb-3" src={imgSanLucas} />
+            <div className="wrapperTextHover">
+              <div className="textHover">San Lucas, Mexico</div>
+            </div>
           </div>
-          <div className="col-md-4">
-            <img className="maldivesImg mb-3" src={imgThailand} />
+          <div className="col-md-4 mb-3 wrapperImage">
+            <img className="image mb-3" src={imgIbiza} />
+            <div className="wrapperTextHover">
+              <div className="textHover">Ibiza, Spain</div>
+            </div>
           </div>
-          <div className="col-md-4">
-            <img className="maldivesImg mb-3" src={imgThailand2} />
+          <div className="col-md-4 mb-3 wrapperImage">
+            <img className="image mb-3" src={imgThailand2} />
+            <div className="wrapperTextHover">
+              <div className="textHover">Thailand</div>
+            </div>
           </div>
         </div>
         <div className="mt-3 pt-3">
