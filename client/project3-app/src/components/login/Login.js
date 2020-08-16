@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import contextLogin from "../../contexts/contextLogin";
 import contextUserInfo from "../../contexts/contextUserInfo";
-import Vacations from "../vacations/VacationsDisplay/Vacations";
+import Footer from "../footer/Footer";
+import { Link } from "react-router-dom";
+import "./Login.css";
 
 function Login() {
   const [form, setForm] = useState({
@@ -10,7 +12,7 @@ function Login() {
     password: "",
   });
 
-  let { login } = useContext(contextLogin);
+  let login = false;
   let { userName, updateUser } = useContext(contextUserInfo);
 
   useEffect(() => {
@@ -71,12 +73,11 @@ function Login() {
   }, []);
 
   return (
-    <div>
-      <h1>Login</h1>
-
+    <div className="login">
+      <div className="display-4 mt-3 mb-3 pb-3 ">Sign In</div>
       <form action="/login" method="POST" onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">User Name </label>
+          <label htmlFor="username">User Name: </label>
           <input
             type="text"
             id="username"
@@ -87,7 +88,7 @@ function Login() {
           />
         </div>
         <div>
-          <label htmlFor="password">Password </label>
+          <label htmlFor="password">Password: </label>
           <input
             type="password"
             id="password"
@@ -97,8 +98,15 @@ function Login() {
             onChange={handleForm}
           />
         </div>
-        <button>Login</button>
+        <button className="btn btn-success btn-lg">Login</button>
       </form>
+      <div>
+        <div className="accountVerify">Don't Have an Account?</div>
+        <button className="btn btn-outline-success font-weight-bold">
+          <Link to="/register">Sign Up</Link>
+        </button>
+      </div>
+      <Footer />
     </div>
   );
 }

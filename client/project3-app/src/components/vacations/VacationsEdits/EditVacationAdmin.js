@@ -21,7 +21,7 @@ function EditVacationAdmin() {
       history.push("/login/admin");
     } else {
       const resJson = await res.json();
-      console.log(resJson[0]);
+      console.log(resJson[0].toDate);
       setVacation(resJson[0]);
     }
   };
@@ -114,7 +114,7 @@ function EditVacationAdmin() {
                   id="fromDate"
                   name="fromDate"
                   required
-                  value={vacation.fromDate.slice(0, 10)}
+                  value={vacation.fromDate}
                   onChange={handleForm}
                 />
               </div>
@@ -125,7 +125,7 @@ function EditVacationAdmin() {
                   id="toDate"
                   name="toDate"
                   required
-                  value={vacation.toDate.slice(0, 10)}
+                  value={vacation.toDate}
                   onChange={handleForm}
                 />
               </div>

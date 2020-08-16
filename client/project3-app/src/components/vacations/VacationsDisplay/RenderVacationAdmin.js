@@ -68,7 +68,7 @@ export default class RenderVacationAdmin extends Component {
             <h4 className="card-title">{destination}</h4>
             <p className="card-text">{description}</p>
             <h6 className="card-text">
-              {fromDate.slice(0, 10)} to {toDate.slice(0, 10)}
+              {fromDate} to {toDate}
             </h6>
             <h6 className="card-subtitle mb-2 text-muted">
               {price}$ for 1 person

@@ -76,16 +76,20 @@ app.route("/auth/admin/verify").get(isAdminAuth, (req, res) => {
 });
 
 app.route("/vacations").get(isAuth, (req, res) => {
-  pool.query(`SELECT * FROM vacations`, [], (err, results, fields) => {
-    if (err) throw err;
-    res.json(results);
-  });
+  pool.query(
+    `SELECT id, destination, description, DATE_FORMAT(fromDate,'%Y-%m-%d') AS fromDate, DATE_FORMAT(toDate,'%Y-%m-%d') AS toDate, price, followersNumber, image FROM vacations`,
+    [],
+    (err, results, fields) => {
+      if (err) throw err;
+      res.json(results);
+    }
+  );
 });
 
 app.route("/get/vacation/edit/:id").get(isAdminAuth, (req, res) => {
   const id = req.params.id;
   pool.query(
-    `SELECT * FROM vacations WHERE id=?`,
+    `SELECT id, destination, description, DATE_FORMAT(fromDate,'%Y-%m-%d') fromDate, DATE_FORMAT(toDate,'%Y-%m-%d') AS toDate, price, followersNumber, image FROM vacations WHERE id=?`,
     [id],
     (err, results, fields) => {
       if (err) throw err;
@@ -96,11 +100,15 @@ app.route("/get/vacation/edit/:id").get(isAdminAuth, (req, res) => {
 });
 
 app.route("/vacations/admin").get(isAdminAuth, (req, res) => {
-  pool.query(`SELECT * FROM vacations`, (err, results, fields) => {
-    if (err) throw err;
-    console.log(req.session.admin);
-    res.json(results);
-  });
+  pool.query(
+    `SELECT id, destination, description, DATE_FORMAT(fromDate,'%Y-%m-%d') AS fromDate, DATE_FORMAT(toDate,'%Y-%m-%d') AS toDate, price, followersNumber, image FROM vacations
+  `,
+    (err, results, fields) => {
+      if (err) throw err;
+      console.log(results);
+      res.json(results);
+    }
+  );
 });
 
 app.route("/login").post((req, res) => {
@@ -289,7 +297,7 @@ app.route("/add/vacation").post(upload.single("image"), (req, res) => {
 
   pool.query(
     `
-    INSERT vacations (destination, description, fromDate, toDate, price, followersNumber ,image)
+    INSERT vacations (destination, description, DATE_FORMAT(fromDate,'%Y-%m-%d') AS fromDate, DATE_FORMAT(toDate,'%Y-%m-%d') AS toDate, price, followersNumber ,image)
     Values(?,?,?,?,?,?,?)
         `,
     [
