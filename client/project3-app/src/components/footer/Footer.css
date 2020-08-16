@@ -1,8 +1,9 @@
 .footerText {
-  position: fixed;
-  width: 100%;
-  bottom: 0;
   color: black;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  position: fixed;
 }
 
 .topFooter {
@@ -36,7 +37,6 @@ a:visited {
 }
 
 body {
-  min-height: 400px;
-  margin-bottom: 100px;
-  clear: both;
+  height: 100%;
+  margin: 0;
 }

@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./mainpage.css";
 import Footer from "../footer/Footer";
+import imgMaldives from "./maldives.jpg";
+import imgThailand from "./thailand.jpg";
+import imgThailand2 from "./thailand2.jpg";
 
 const MainPage = () => {
   return (
@@ -20,13 +23,35 @@ const MainPage = () => {
           of special vacations on the water
         </p>
         <div className="row">
-          <div className="col-md-12">
+          <div className="col-md-4 mb-3">
+            <img className="maldivesImg mb-3" src={imgMaldives} />
+          </div>
+          <div className="col-md-4">
+            <img className="maldivesImg mb-3" src={imgThailand} />
+          </div>
+          <div className="col-md-4">
+            <img className="maldivesImg mb-3" src={imgThailand2} />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-4 mb-3">
+            <img className="maldivesImg mb-3" src={imgMaldives} />
+          </div>
+          <div className="col-md-4">
+            <img className="maldivesImg mb-3" src={imgThailand} />
+          </div>
+          <div className="col-md-4">
+            <img className="maldivesImg mb-3" src={imgThailand2} />
+          </div>
+        </div>
+        <div className="mt-3 pt-3">
+          <div className="btn btn-success w3-round-xlarge w3-xxxlarge w3-padding-large">
             <Link to="/register">Let's Get Started!</Link>
           </div>
         </div>
-        <div className="footerText">
-          <Footer />
-        </div>
+      </div>
+      <div className="footer">
+        <Footer />
       </div>
     </div>
   );

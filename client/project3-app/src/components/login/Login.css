@@ -37,3 +37,8 @@ label {
   margin-top: 60px;
   margin-bottom: 10px;
 }
+
+body {
+  height: 100%;
+  margin: 0;
+}

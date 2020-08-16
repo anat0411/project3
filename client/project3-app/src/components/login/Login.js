@@ -74,39 +74,45 @@ function Login() {
 
   return (
     <div className="login">
-      <div className="display-4 mt-3 mb-3 pb-3 ">Sign In</div>
-      <form action="/login" method="POST" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">User Name: </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            required
-            value={form.username}
-            onChange={handleForm}
-          />
+      <div className="container">
+        <div className="text-left small">
+          <Link to="" className=" ml-2 mt-2 btn btn-outline-dark btn-sm">
+            Home
+          </Link>
         </div>
+        <div className="display-4 mt-3 mb-3 pb-3 ">Sign In</div>
+        <form action="/login" method="POST" onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="username">User Name: </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              required
+              value={form.username}
+              onChange={handleForm}
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password: </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              value={form.password}
+              onChange={handleForm}
+            />
+          </div>
+          <button className="btn btn-success btn-lg">Login</button>
+        </form>
         <div>
-          <label htmlFor="password">Password: </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            value={form.password}
-            onChange={handleForm}
-          />
+          <div className="accountVerify">Don't Have an Account?</div>
+          <button className="btn btn-outline-success font-weight-bold">
+            <Link to="/register">Sign Up</Link>
+          </button>
         </div>
-        <button className="btn btn-success btn-lg">Login</button>
-      </form>
-      <div>
-        <div className="accountVerify">Don't Have an Account?</div>
-        <button className="btn btn-outline-success font-weight-bold">
-          <Link to="/register">Sign Up</Link>
-        </button>
       </div>
-      <Footer />
     </div>
   );
 }

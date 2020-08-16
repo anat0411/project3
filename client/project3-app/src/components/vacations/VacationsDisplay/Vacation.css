@@ -1,9 +1,11 @@
-.footer {
-  position: fixed;
-  background-color: lightyellow;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  color: white;
-  text-align: center;
+.vacations {
+  margin-bottom: 200px;
+}
+
+.logoutButton {
+  text-align: justify;
+}
+
+.container {
+  font-family: "Nunito", sans-serif;
 }

@@ -40,6 +40,11 @@ function Register() {
   return (
     <div className="register">
       <div className="container ">
+        <div className="text-left small">
+          <Link to="" className=" ml-2 mt-2 btn btn-outline-dark btn-sm">
+            Home
+          </Link>
+        </div>
         <div className="display-4 mt-3 mb-3 pb-3">Sign Up</div>
         <form action="/register" method="POST" onSubmit={handleSubmit}>
           <div>
@@ -95,9 +100,6 @@ function Register() {
           <button className="btn btn-outline-success font-weight-bold">
             <Link to="/login">Sign In</Link>
           </button>
-        </div>
-        <div>
-          <Footer />
         </div>
       </div>
     </div>

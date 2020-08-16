@@ -3,6 +3,8 @@ import RenderVacation from "./RenderVacation";
 import { useHistory } from "react-router-dom";
 import Footer from "../../footer/Footer";
 import contextUserInfo from "../../../contexts/contextUserInfo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import "./Vacation.css";
 
 function Vacations() {
@@ -76,15 +78,21 @@ function Vacations() {
   }, []);
 
   return (
-    <div className="container">
-      <div>{info.map(renderInfo)}</div>
-      <div className="row">
-        <div onClick={logoutUser} className="col-md-2 btn btn-primary">
-          Logout
+    <div>
+      <div className="text-left mb-3 mt-3 ml-3">
+        <div
+          onClick={logoutUser}
+          className="btn w3-button w3-white w3-border w3-border-red logoutButton"
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} /> Sign Out
         </div>
       </div>
-      <div key={vacations.id}>
-        <RenderVacation key={vacations.id} data={vacations} />
+      <div className="container">
+        <div>{info.map(renderInfo)}</div>
+        <div className="display-4 mt-3 mb-3 pb-3 ">Vacations</div>
+        <div className="vacations mt-3 pt-3" key={vacations.id}>
+          <RenderVacation key={vacations.id} data={vacations} />
+        </div>
       </div>
       <div className="footer">
         <Footer />

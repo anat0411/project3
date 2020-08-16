@@ -13,7 +13,7 @@ export default class RenderVacation extends Component {
     }) => (
       <div
         key={id}
-        className="card col-md-4 mt-1 mb-1"
+        className="card col-md-4 mt-1 mb-3"
         style={{ width: "18rem" }}
       >
         <img className="card-img-top" src={image} alt="card image cap" />
