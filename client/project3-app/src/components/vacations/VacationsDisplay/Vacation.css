@@ -9,3 +9,8 @@
 .container {
   font-family: "Nunito", sans-serif;
 }
+
+.helloText {
+  font-size: 20px;
+  font-weight: 600;
+}

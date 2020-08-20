@@ -1,6 +1,13 @@
+//React
 import React, { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
+
+//Pages
 import contextLoginAdmin from "../../contexts/contextLoginAdmin";
+
+//Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
 
 function LoginAdmin() {
   const [form, setForm] = useState({
@@ -66,7 +73,15 @@ function LoginAdmin() {
   }, []);
 
   return (
-    <div>
+    <div className="container">
+      <div className="text-left small mt-3">
+        <Link
+          to=""
+          className="btn w3-button w3-white w3-border w3-border-black mr-3"
+        >
+          <FontAwesomeIcon icon={faHome} /> Home
+        </Link>
+      </div>
       <h1>Login</h1>
       <form action="/login/admin" method="POST" onSubmit={handleSubmit}>
         <div>

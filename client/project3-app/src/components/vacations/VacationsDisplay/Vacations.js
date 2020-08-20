@@ -88,8 +88,8 @@ function Vacations() {
         </div>
       </div>
       <div className="container">
-        <div>{info.map(renderInfo)}</div>
-        <div className="display-4 mt-3 mb-3 pb-3 ">Vacations</div>
+        <div className="helloText">{info.map(renderInfo)}</div>
+        <div className="display-3 mt-3 mb-3 pb-3 ">Vacations</div>
         <div className="vacations mt-3 pt-3" key={vacations.id}>
           <RenderVacation key={vacations.id} data={vacations} />
         </div>

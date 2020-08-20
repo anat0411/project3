@@ -1,9 +1,18 @@
+//React
 import React, { useState, useEffect } from "react";
+import { useHistory, Link } from "react-router-dom";
+
+//Pages
 import RenderVacationAdmin from "./RenderVacationAdmin";
-import { useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
+import AdminFooter from "../../footer/AdminFooter/AdminFooter";
+
+//Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faSignOutAlt,
+  faHome,
+} from "@fortawesome/free-solid-svg-icons";
 
 function VacationsAdmin() {
   const [vacations, setVacations] = useState([]);
@@ -26,23 +35,60 @@ function VacationsAdmin() {
     }
   };
 
+  const logoutAdmin = async () => {
+    const res = await fetch("http://localhost:3001/logout/admin", {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+    });
+
+    console.log("LOGOUT");
+
+    const { success } = await res.json();
+    if (success) {
+      alert("You have signed out!");
+      history.push("");
+    } else {
+      alert("Somthing went wrong...");
+    }
+  };
+
   useEffect(() => {
     getVacations();
   }, []);
 
   console.log(vacations);
   return (
-    <div className="container">
-      <h1>Vacations Admin</h1>
-      <div className="row">
-        <div className="col-md-1 mb-3">
-          <Link to="/add/vacation">
-            <FontAwesomeIcon icon={faPlus} />
+    <div>
+      <div className="container">
+        <div className="text-left small">
+          <Link
+            to=""
+            className="btn w3-button w3-white w3-border w3-border-black mr-3"
+          >
+            <FontAwesomeIcon icon={faHome} /> Home
           </Link>
+          <div
+            onClick={logoutAdmin}
+            className="btn w3-button w3-white w3-border w3-border-red"
+          >
+            <FontAwesomeIcon icon={faSignOutAlt} /> Sign Out
+          </div>
+        </div>
+        <div className="display-4 mt-3 mb-3 pb-3 ">Vacations</div>
+        <div className="row">
+          <div className="col-md-1 mb-3">
+            <Link to="/add/vacation">
+              <FontAwesomeIcon icon={faPlus} />
+            </Link>
+          </div>
+        </div>
+        <div>
+          <RenderVacationAdmin key={vacations.id} data={vacations} />
         </div>
       </div>
-      <div>
-        <RenderVacationAdmin key={vacations.id} data={vacations} />
+      <div className="footer">
+        <AdminFooter />
       </div>
     </div>
   );
