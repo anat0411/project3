@@ -66,7 +66,7 @@ const MainPage = () => {
           </div>
         </div>
         <div className="mt-3 pt-3">
-          <div className="btn btn-success w3-round-xlarge w3-xxxlarge w3-padding-large">
+          <div className="btn btn-success w3-round-xlarge w3-xxlarge w3-padding-large">
             <Link to="/register">Let's Get Started!</Link>
           </div>
         </div>
