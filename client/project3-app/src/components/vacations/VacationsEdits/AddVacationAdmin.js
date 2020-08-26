@@ -38,6 +38,8 @@ function AddVacationAdmin() {
     formData.append("followersNumber", form.followersNumber);
     formData.append("image", files[0]);
 
+    console.log(formData);
+
     if (files.length > 0) {
       console.log("form: ", JSON.stringify(form));
       const res = await fetch("http://localhost:3001/add/vacation", {

@@ -8,14 +8,14 @@ const bcrypt = require("bcrypt");
 const multer = require("multer");
 const { v4: uuid4 } = require("uuid");
 const path = require("path");
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 
 const storage = multer.diskStorage({
   destination: "./uploads",
   filename: (req, file, cb) => {
     console.log(file);
     const ext = path.extname(file.originalname);
-    //string
-    //destination----- not uploads?
 
     if (![".svg", ".png", ".jpeg", ".jpg"].includes(ext)) {
       return cb(new Error("Ext disalowed"));
@@ -27,6 +27,42 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 app.use("/", express.static("../client/bulid"));
 app.use("/uploads", express.static("uploads"));
+
+const appSession = session({
+  secret: process.env.SECRET || "asdf#$%#rgdfg3f",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 1000 * 60 * 60, // 1 hour
+  },
+});
+
+io.use((socket, next) => {
+  appSession(socket.request, {}, next);
+});
+
+io.use((socket, next) => {
+  if (socket.request.session.user) return next();
+  // next(new Error('403'));
+  socket.disconnect();
+});
+app.use(appSession);
+
+io.on("connection", (socket) => {
+  console.log(`New client id ${socket.id} -------------`);
+
+  socket.on("follow", function (data) {
+    console.log("---------------");
+    console.log(data, "           ", socket.request.session.user.id);
+    console.log("---------------");
+    `UPDATE users SET following = ? WHERE id = ?;`,
+      [data, socket.request.session.user.id];
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`Client id ${socket.id} disconnect ++++++++++++++++++`);
+  });
+});
 
 app.use(
   cors({
@@ -120,9 +156,9 @@ app.route("/login").post((req, res) => {
 
   pool.query(
     `
-            SELECT * FROM users
-            WHERE username = ?
-        `,
+      SELECT * FROM users
+      WHERE username = ?
+      `,
     [username],
     (err, results) => {
       if (err) throw err;
@@ -306,18 +342,10 @@ app.route("/add/vacation").post(upload.single("image"), (req, res) => {
 
   pool.query(
     `
-    INSERT vacations (destination, description, DATE_FORMAT(fromDate,'%Y-%m-%d') AS fromDate, DATE_FORMAT(toDate,'%Y-%m-%d') AS toDate, price, followersNumber ,image)
+    INSERT vacations (destination, description, fromDate , toDate , price, followersNumber ,image)
     Values(?,?,?,?,?,?,?)
         `,
-    [
-      destination,
-      description,
-      fromDate,
-      toDate,
-      price,
-      followersNumber,
-      image.path,
-    ],
+    [destination, description, fromDate, toDate, price, 0, image.path],
     (err, results) => {
       if (err) throw err;
       if (results) {
@@ -426,4 +454,4 @@ app.route("/edit/vacation/:id").put(upload.single("image"), (req, res) => {
   }
 });
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+http.listen(port, () => console.log(`Server running on port ${port}`));

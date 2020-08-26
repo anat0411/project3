@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import contextLogin from "../../contexts/contextLogin";
 import contextUserInfo from "../../contexts/contextUserInfo";
@@ -14,6 +14,16 @@ function Login() {
 
   let login = false;
   let { userName, updateUser } = useContext(contextUserInfo);
+
+  const myIo = useRef(); // useRef לא מתאפס
+
+  // useEffect(() => {
+  //   myIo.current = SocketIo();
+
+  //   return () => {
+  //     myIo.current.disconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     console.log(login);
