@@ -50,13 +50,27 @@ app.use(appSession);
 
 io.on("connection", (socket) => {
   console.log(`New client id ${socket.id} -------------`);
-
+  const queryFollow = `INSERT INTO follow (userID, vacationID) VALUES (?,?)`;
+  const queryUnfollow = `DELETE FROM follow WHERE vacationID=?`;
   socket.on("follow", function (data) {
     console.log("---------------");
     console.log(data, "           ", socket.request.session.user.id);
     console.log("---------------");
-    `UPDATE users SET following = ? WHERE id = ?;`,
-      [data, socket.request.session.user.id];
+    const { vacationId, follow } = data;
+    console.log(data, "_----------------------");
+    if (follow) {
+      pool.query(
+        queryFollow,
+        [socket.request.session.user.id, vacationId],
+        (err, results, fields) => {
+          if (err) throw err;
+        }
+      );
+    } else {
+      pool.query(queryUnfollow, [vacationId], (err, results, fields) => {
+        if (err) throw err;
+      });
+    }
   });
 
   socket.on("disconnect", () => {
@@ -112,12 +126,35 @@ app.route("/auth/admin/verify").get(isAdminAuth, (req, res) => {
 });
 
 app.route("/vacations").get(isAuth, (req, res) => {
+  let vacations = null;
+  let follows = null;
   pool.query(
     `SELECT id, destination, description, DATE_FORMAT(fromDate,'%Y-%m-%d') AS fromDate, DATE_FORMAT(toDate,'%Y-%m-%d') AS toDate, price, followersNumber, image FROM vacations`,
     [],
     (err, results, fields) => {
       if (err) throw err;
-      res.json(results);
+      vacations = results;
+      console.log("this.vacations    ", vacations);
+      const userID = req.session.user.id;
+      pool.query(
+        `SELECT * FROM follow WHERE userID=?`,
+        [userID],
+        (err, results, fields) => {
+          if (err) throw err;
+          follows = results;
+          console.log("this.follows    ", follows);
+          vacations.map((vacation) => {
+            follows.map((follow) => {
+              if (vacation.id === follow.vacationID) {
+                vacation.follow = true;
+                console.log(vacation.id, "--------", follow.vacationID);
+              }
+            });
+          });
+          console.log(vacations);
+          res.json(vacations);
+        }
+      );
     }
   );
 });
@@ -317,7 +354,6 @@ app.route("/login/admin").post((req, res) => {
 app.route("/add/vacation").post(upload.single("image"), (req, res) => {
   console.log(" --------- req.body: ", req.body);
   console.log(" --------- req.file: ", req.file);
-  // console.log(" --------- req: ", req);
   const {
     destination,
     description,
@@ -357,6 +393,7 @@ app.route("/add/vacation").post(upload.single("image"), (req, res) => {
       }
     }
   );
+  io.emit("updateVacation", true);
 });
 
 app.route("/delete/vacation/:id").delete((req, res) => {
@@ -372,6 +409,7 @@ app.route("/delete/vacation/:id").delete((req, res) => {
       res.json({ success: false });
     }
   });
+  io.emit("updateVacation", true);
 });
 
 app.route("/edit/vacation/:id").put(upload.single("image"), (req, res) => {
@@ -452,6 +490,7 @@ app.route("/edit/vacation/:id").put(upload.single("image"), (req, res) => {
       }
     );
   }
+  io.emit("updateVacation", true);
 });
 
 http.listen(port, () => console.log(`Server running on port ${port}`));

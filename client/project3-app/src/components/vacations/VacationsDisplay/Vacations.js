@@ -5,7 +5,8 @@ import Footer from "../../footer/Footer";
 import contextUserInfo from "../../../contexts/contextUserInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import "./Vacation.css";
+import io from "socket.io-client";
+import "./Vacations.css";
 
 function Vacations() {
   const [vacations, setVacations] = useState([]);
@@ -15,6 +16,8 @@ function Vacations() {
       lName: "",
     },
   ]);
+
+  const socket = io.connect("http://localhost:3001");
 
   const contextInfo = useContext(contextUserInfo);
 
@@ -32,6 +35,7 @@ function Vacations() {
       const resJson = await res.json();
       console.log(resJson);
       setVacations(resJson);
+      console.log(vacations);
     }
   };
 
@@ -77,6 +81,10 @@ function Vacations() {
     getInfo();
   }, []);
 
+  socket.on("updateVacation", function () {
+    getVacations();
+  });
+
   return (
     <div>
       <div className="text-left mb-3 mt-3 ml-3">
@@ -91,7 +99,11 @@ function Vacations() {
         <div className="helloText">{info.map(renderInfo)}</div>
         <div className="display-3 mt-3 mb-3 pb-3 ">Vacations</div>
         <div className="vacations mt-3 pt-3" key={vacations.id}>
-          <RenderVacation key={vacations.id} data={vacations} />
+          <RenderVacation
+            key={vacations.id}
+            data={vacations}
+            getVacations={getVacations}
+          />
         </div>
       </div>
       <div className="footer">

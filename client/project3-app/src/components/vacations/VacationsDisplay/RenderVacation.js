@@ -4,33 +4,34 @@ import io from "socket.io-client";
 export default class RenderVacation extends Component {
   constructor(props) {
     super(props);
-    this.state = { follow: false };
     this.socket = null;
+    this.state = { sortedVacations: null };
   }
 
-  onFollow = () => {
-    const data = this.props.data[0].id;
-    this.socket.emit("follow", data);
-    console.log("SEND");
-    console.log(this.socket);
-  };
   componentDidMount() {
     this.socket = io.connect("http://localhost:3001");
-    console.log(this.socket);
-    // this.socket.on("message", (message) => {
-    //   console.log(message);
-    // });
-    // this.socket.send("this is a message to server");
   }
+
   render() {
-    const followOnClick = () => {
-      if (this.state.follow === false) {
-        this.setState({ follow: true });
-        this.onFollow();
+    const { data, getVacations } = this.props;
+
+    console.log(data);
+
+    const sortedVacations = data.sort((a, b) => {
+      const x = a.follow ? 1 : 0;
+      const y = b.follow ? 1 : 0;
+      return y - x;
+    });
+
+    const followOnClick = (id, follow) => {
+      if (follow) {
+        this.socket.emit("follow", { vacationId: id, follow: false });
       } else {
-        this.setState({ follow: false });
-        this.onFollow();
+        this.socket.emit("follow", { vacationId: id, follow: true });
       }
+      setTimeout(() => {
+        getVacations();
+      }, 500);
     };
 
     const renderVacation = ({
@@ -41,38 +42,39 @@ export default class RenderVacation extends Component {
       fromDate,
       toDate,
       image,
+      follow,
     }) => (
       <div
         key={id}
+        id={id}
         className="card col-md-4 mt-1 mb-3"
         style={{ width: "18rem" }}
       >
         <img className="card-img-top" src={image} alt="card image cap" />
-        <div className="card-body">
+        <div className="card-body" id={id}>
           <h4 className="card-title">{destination}</h4>
           <p className="card-text">{description}</p>
           <h6 className="card-text">
-            {fromDate.slice(0, 10)} to {toDate.slice(0, 10)}
+            {fromDate} to {toDate}
           </h6>
           <h6 className="card-subtitle mb-2 text-muted">
             {price}$ for 1 person
           </h6>
-          <a href="#" className="btn btn-primary" onClick={followOnClick}>
-            {this.state.follow == false ? (
-              <button>Follow</button>
-            ) : (
-              <button>Follwing</button>
-            )}
+          <a
+            href="#"
+            className="btn btn-primary"
+            onClick={() => followOnClick(id, follow)}
+          >
+            {follow ? <button>Following</button> : <button>Follow</button>}
           </a>
         </div>
       </div>
     );
 
-    const vacations = this.props.data;
     return (
       <div>
-        <div className="row" key={vacations.id}>
-          {vacations.map(renderVacation)}
+        <div className="row" key={data.id}>
+          {sortedVacations.map((vacation) => renderVacation(vacation))}
         </div>
       </div>
     );
