@@ -12,6 +12,7 @@ import {
   faPlus,
   faSignOutAlt,
   faHome,
+  faChartBar,
 } from "@fortawesome/free-solid-svg-icons";
 
 function VacationsAdmin() {
@@ -68,9 +69,15 @@ function VacationsAdmin() {
           >
             <FontAwesomeIcon icon={faHome} /> Home
           </Link>
+          <Link
+            to="/admin/chart"
+            className="btn w3-button w3-white w3-border w3-border-black ml-3 mr-3"
+          >
+            <FontAwesomeIcon icon={faChartBar} /> Followers Chart
+          </Link>
           <div
             onClick={logoutAdmin}
-            className="btn w3-button w3-white w3-border w3-border-red"
+            className="btn w3-button w3-white w3-border w3-border-red ml-3"
           >
             <FontAwesomeIcon icon={faSignOutAlt} /> Sign Out
           </div>

@@ -17,7 +17,7 @@ function Vacations() {
     },
   ]);
 
-  const socket = io.connect("http://localhost:3001");
+  const socket = io.connect("http://localhost:3001", { query: "id=user" });
 
   const contextInfo = useContext(contextUserInfo);
 

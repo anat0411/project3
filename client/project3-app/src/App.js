@@ -11,6 +11,7 @@ import Vacations from "./components/vacations/VacationsDisplay/Vacations";
 import VacationsAdmin from "./components/vacations/VacationsDisplay/VacationsAdmin";
 import AddVacationAdmin from "./components/vacations/VacationsEdits/AddVacationAdmin";
 import EditVacationAdmin from "./components/vacations/VacationsEdits/EditVacationAdmin";
+import AdminChart from "./components/AdminChart.js/AdminChart";
 import contextUserInfo from "./contexts/contextUserInfo";
 
 class App extends Component {
@@ -55,6 +56,9 @@ class App extends Component {
               </Route>
               <Route exact path="/edit/vacation/:id">
                 <EditVacationAdmin />
+              </Route>
+              <Route exact path="/admin/chart">
+                <AdminChart />
               </Route>
             </Switch>
           </Router>
