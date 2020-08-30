@@ -45,7 +45,6 @@ io.use((socket, next) => {
   console.log(socket.request.session);
   if (socket.request.session.user || socket.request.session.admin)
     return next();
-  // next(new Error('403'));
   socket.disconnect();
 });
 app.use(appSession);
@@ -72,6 +71,7 @@ io.on("connection", (socket) => {
           if (err) throw err;
         }
       );
+
       socket.to("admin-room").emit("updateFollow");
     } else {
       pool.query(queryUnfollow, [vacationId], (err, results, fields) => {
@@ -203,18 +203,6 @@ app.route("/admin/chart").get(isAdminAuth, (req, res) => {
     }
   );
 });
-
-// app.route("/admin/chart").post(isAdminAuth, (req, res) => {
-//   console.log(req.body);
-//   pool.query(
-//     `UPDATE vacations SET followersNumber= ? WHERE destination=?`,
-//     [req.body],
-//     (err, results, fields) => {
-//       if (err) throw err;
-//       console.log(results);
-//     }
-//   );
-// });
 
 app.route("/login").post((req, res) => {
   const { username, password } = req.body;
@@ -436,7 +424,6 @@ app.route("/delete/vacation/:id").delete(isAdminAuth, (req, res) => {
     console.log(results);
     if (results) {
       res.json({ success: true });
-      // res.redirect("/vacations/admin");
     } else {
       res.json({ success: false });
     }

@@ -4,6 +4,9 @@ import { useHistory } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
 import io from "socket.io-client";
 
+//Pages
+import config from "../../config";
+
 function AdminChart() {
   const [data, setData] = useState([]);
   const [vacationDestination, setVacationDestination] = useState([]);
@@ -11,7 +14,7 @@ function AdminChart() {
   const history = useHistory();
 
   const getData = async () => {
-    const res = await fetch("http://localhost:3001/admin/chart", {
+    const res = await fetch(`${config.general.SERVER_URL}/admin/chart`, {
       method: "GET",
       mode: "cors",
       credentials: "include",

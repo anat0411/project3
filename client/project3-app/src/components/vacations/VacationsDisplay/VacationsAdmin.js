@@ -36,6 +36,14 @@ function VacationsAdmin() {
     }
   };
 
+  const onDeleteVacation = (id) => {
+    const updatedVacations = vacations.filter((vacation) => {
+      if (vacation.id !== id) return vacation;
+    });
+    console.log(updatedVacations);
+    setVacations(updatedVacations);
+  };
+
   const logoutAdmin = async () => {
     const res = await fetch(`${config.general.SERVER_URL}/logout/admin`, {
       method: "GET",
@@ -88,7 +96,11 @@ function VacationsAdmin() {
           </div>
         </div>
         <div>
-          <RenderVacationAdmin key={vacations.id} data={vacations} />
+          <RenderVacationAdmin
+            key={vacations.id}
+            data={vacations}
+            onDeleteVacation={onDeleteVacation}
+          />
         </div>
       </div>
       <div className="footer">

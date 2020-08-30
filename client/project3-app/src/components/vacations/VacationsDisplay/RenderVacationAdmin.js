@@ -11,6 +11,7 @@ import config from "../../../config";
 
 export default class RenderVacationAdmin extends Component {
   render() {
+    const { onDeleteVacation } = this.props;
     const onDelete = async (id) => {
       const res = await fetch(`http://localhost:3001/delete/vacation/${id}`, {
         method: "DELETE",
@@ -19,6 +20,7 @@ export default class RenderVacationAdmin extends Component {
       });
       if (res.status === 200) {
         alert("Vacation Deleted!");
+        onDeleteVacation(id);
         // history.push("/vacations/admin");
       }
     };
