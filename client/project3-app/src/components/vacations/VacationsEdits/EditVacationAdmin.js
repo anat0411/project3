@@ -1,7 +1,8 @@
+//React
 import React, { useEffect, useState, useRef, useReducer } from "react";
-import { useParams } from "react-router";
-import { useHistory } from "react-router-dom";
-import RenderVacation from "../VacationsDisplay/RenderVacation";
+import { useParams, useHistory } from "react-router";
+
+//Pages
 import config from "../../../config";
 
 function EditVacationAdmin() {
@@ -12,7 +13,7 @@ function EditVacationAdmin() {
   const fileInputRef = useRef();
 
   const getVacation = async () => {
-    const res = await fetch(`http://localhost:3001/get/vacation/edit/${id}`, {
+    const res = await fetch(`${config.general.SERVER_URL}/${id}`, {
       method: "GET",
       mode: "cors",
       credentials: "include",
@@ -21,7 +22,6 @@ function EditVacationAdmin() {
       history.push("/login/admin");
     } else {
       const resJson = await res.json();
-      console.log(resJson[0].toDate);
       setVacation(resJson[0]);
     }
   };
@@ -46,7 +46,7 @@ function EditVacationAdmin() {
       formData.append("image", files[0]);
     }
 
-    const res = await fetch(`http://localhost:3001/edit/vacation/${id}`, {
+    const res = await fetch(`${config.general.SERVER_URL}/${id}`, {
       method: "PUT",
       mode: "cors",
       credentials: "include",
@@ -54,8 +54,7 @@ function EditVacationAdmin() {
     });
 
     const resJson = await res.json();
-    console.log(resJson);
-    console.log(vacation);
+
     if (resJson) {
       history.push("/vacations/admin");
     } else {

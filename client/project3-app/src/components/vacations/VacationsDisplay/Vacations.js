@@ -1,12 +1,18 @@
+//React
 import React, { useState, useEffect, useContext } from "react";
-import RenderVacation from "./RenderVacation";
 import { useHistory } from "react-router-dom";
+import io from "socket.io-client";
+
+//Pages
+import RenderVacation from "./RenderVacation";
 import Footer from "../../footer/Footer";
 import contextUserInfo from "../../../contexts/contextUserInfo";
+import "./Vacations.css";
+import config from "../../../config";
+
+//Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import io from "socket.io-client";
-import "./Vacations.css";
 
 function Vacations() {
   const [vacations, setVacations] = useState([]);
@@ -17,14 +23,14 @@ function Vacations() {
     },
   ]);
 
-  const socket = io.connect("http://localhost:3001", { query: "id=user" });
+  const socket = io.connect(config, { query: "id=user" });
 
   const contextInfo = useContext(contextUserInfo);
 
   const history = useHistory();
 
   const getVacations = async () => {
-    const res = await fetch("http://localhost:3001/vacations", {
+    const res = await fetch(`${config.general.SERVER_URL}/vacations`, {
       method: "GET",
       mode: "cors",
       credentials: "include",
@@ -33,14 +39,12 @@ function Vacations() {
       history.push("/login");
     } else {
       const resJson = await res.json();
-      console.log(resJson);
       setVacations(resJson);
-      console.log(vacations);
     }
   };
 
   const getInfo = async () => {
-    const url = `http://localhost:3001/login/${contextInfo.userName}`;
+    const url = `${config.general.SERVER_URL}/${contextInfo.userName}`;
     const res = await fetch(url, {
       method: "GET",
       mode: "cors",
@@ -59,13 +63,11 @@ function Vacations() {
   };
 
   const logoutUser = async () => {
-    const res = await fetch("http://localhost:3001/logout", {
+    const res = await fetch(`${config.general.SERVER_URL}/logout`, {
       method: "GET",
       mode: "cors",
       credentials: "include",
     });
-
-    console.log("LOGOUT");
 
     const { success } = await res.json();
     if (success) {

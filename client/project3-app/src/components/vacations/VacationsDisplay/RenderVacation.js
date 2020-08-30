@@ -1,5 +1,9 @@
+//React
 import React, { Component } from "react";
 import io from "socket.io-client";
+
+//Pages
+import config from "../../../config";
 
 export default class RenderVacation extends Component {
   constructor(props) {
@@ -9,13 +13,11 @@ export default class RenderVacation extends Component {
   }
 
   componentDidMount() {
-    this.socket = io.connect("http://localhost:3001");
+    this.socket = io.connect(`${config.general.SERVER_URL}`);
   }
 
   render() {
     const { data, getVacations } = this.props;
-
-    console.log(data);
 
     const sortedVacations = data.sort((a, b) => {
       const x = a.follow ? 1 : 0;

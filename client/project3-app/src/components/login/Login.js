@@ -1,9 +1,9 @@
+//React
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useHistory } from "react-router-dom";
-import contextLogin from "../../contexts/contextLogin";
+import { useHistory, Link } from "react-router-dom";
+
+//Pages
 import contextUserInfo from "../../contexts/contextUserInfo";
-import Footer from "../footer/Footer";
-import { Link } from "react-router-dom";
 import "./Login.css";
 
 function Login() {
@@ -15,18 +15,7 @@ function Login() {
   let login = false;
   let { userName, updateUser } = useContext(contextUserInfo);
 
-  const myIo = useRef(); // useRef לא מתאפס
-
-  // useEffect(() => {
-  //   myIo.current = SocketIo();
-
-  //   return () => {
-  //     myIo.current.disconnect();
-  //   };
-  // }, []);
-
   useEffect(() => {
-    console.log(login);
     if (login) {
       history.push(`/vacations`);
     }
@@ -54,12 +43,10 @@ function Login() {
     updateUser(form.username);
 
     const data = await res.json();
-    console.log(data);
 
     if (data.success) {
       login = true;
-      console.log(login);
-      // alert("Welcome!");
+      alert("Welcome!");
       history.push(`vacations`);
     }
   };

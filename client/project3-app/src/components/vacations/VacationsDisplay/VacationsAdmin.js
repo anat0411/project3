@@ -5,6 +5,7 @@ import { useHistory, Link } from "react-router-dom";
 //Pages
 import RenderVacationAdmin from "./RenderVacationAdmin";
 import AdminFooter from "../../footer/AdminFooter/AdminFooter";
+import config from "../../../config";
 
 //Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,7 +22,7 @@ function VacationsAdmin() {
   const history = useHistory();
 
   const getVacations = async () => {
-    const res = await fetch("http://localhost:3001/vacations/admin", {
+    const res = await fetch(`${config.general.SERVER_URL}/vacations/admin`, {
       method: "GET",
       mode: "cors",
       credentials: "include",
@@ -31,19 +32,16 @@ function VacationsAdmin() {
       history.push("/login/admin");
     } else {
       const resJson = await res.json();
-      console.log(resJson);
       setVacations(resJson);
     }
   };
 
   const logoutAdmin = async () => {
-    const res = await fetch("http://localhost:3001/logout/admin", {
+    const res = await fetch(`${config.general.SERVER_URL}/logout/admin`, {
       method: "GET",
       mode: "cors",
       credentials: "include",
     });
-
-    console.log("LOGOUT");
 
     const { success } = await res.json();
     if (success) {
@@ -58,7 +56,6 @@ function VacationsAdmin() {
     getVacations();
   }, []);
 
-  console.log(vacations);
   return (
     <div>
       <div className="container">

@@ -2,9 +2,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory, Link } from "react-router-dom";
 
-//Pages
-import contextLoginAdmin from "../../contexts/contextLoginAdmin";
-
 //Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
@@ -15,10 +12,9 @@ function LoginAdmin() {
     password: "",
   });
 
-  let { login } = useContext(contextLoginAdmin);
+  let { login } = false;
 
   useEffect(() => {
-    console.log(login);
     if (login) {
       history.push("/vacations/admin");
     }
@@ -44,11 +40,9 @@ function LoginAdmin() {
     });
 
     const data = await res.json();
-    console.log(data);
 
     if (data.success) {
       login = true;
-      console.log(login);
       alert("Welcome!");
       history.push("/vacations/admin");
     }

@@ -1,7 +1,12 @@
+//React
 import React from "react";
 import { Link } from "react-router-dom";
+
+//Pages
 import "./mainpage.css";
 import Footer from "../footer/Footer";
+
+//Images
 import imgMaldives from "./maldives.jpg";
 import imgThailand from "./thailand.jpg";
 import imgThailand2 from "./thailand2.jpg";
@@ -13,7 +18,7 @@ const MainPage = () => {
   return (
     <div className="page">
       <div className="conatiner">
-        <div className="small text-left ml-2 mt-2 textfont">
+        <div className="small text-left ml-2 mt-2 textfont adminButton">
           <Link to="/login/admin">Admin Login</Link>
         </div>
         {/* <div className="small text-left ml-2 mt-2">

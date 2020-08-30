@@ -1,3 +1,4 @@
+//React
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
@@ -19,7 +20,6 @@ function AdminChart() {
       history.push("/login/admin");
     } else {
       const followData = await res.json();
-      console.log(followData);
       setData(followData);
       let followDataSorted = {};
       followData.forEach((vacation) => {
@@ -29,7 +29,17 @@ function AdminChart() {
         else followDataSorted[key] = 1;
       });
       setFollowDataSorted(followDataSorted);
-      console.log(Object.keys(followDataSorted));
+      //   const result = await fetch("http://localhost:3001/admin/chart", {
+      //     method: "POST",
+      //     mode: "cors",
+      //     credentials: "include",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(Object(followDataSorted)),
+      //   });
+      //   const dataForFollowersNum = await result.json();
+      //   console.log(dataForFollowersNum);
     }
   };
 
@@ -41,14 +51,13 @@ function AdminChart() {
         getData();
       }, 500);
     });
-    console.log(socket);
   }, []);
 
   const dataForChart = {
     labels: Object.keys(followDataSorted),
     datasets: [
       {
-        label: "My First dataset",
+        label: "Vacations Users Follow",
         backgroundColor: "rgba(255,99,132,0.2)",
         borderColor: "rgba(255,99,132,1)",
         borderWidth: 1,

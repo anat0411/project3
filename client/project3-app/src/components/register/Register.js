@@ -1,7 +1,8 @@
+//React
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
-import Footer from "../footer/Footer";
+import { useHistory, Link } from "react-router-dom";
+
+//Pages
 import "./Register.css";
 
 function Register() {

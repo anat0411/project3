@@ -1,7 +1,9 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+//React
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 
-// import "./AddVacation.css";
+//Pages
+import config from "../../../config";
 
 function AddVacationAdmin() {
   const [form, setForm] = useState({
@@ -26,9 +28,6 @@ function AddVacationAdmin() {
 
     const files = fileInputRef.current.files;
 
-    console.log(files[0]);
-    console.log(form.toDate);
-    console.log("FORM ", JSON.stringify(form));
     const formData = new FormData();
     formData.append("destination", form.destination);
     formData.append("description", form.description);
@@ -38,18 +37,14 @@ function AddVacationAdmin() {
     formData.append("followersNumber", form.followersNumber);
     formData.append("image", files[0]);
 
-    console.log(formData);
-
     if (files.length > 0) {
-      console.log("form: ", JSON.stringify(form));
-      const res = await fetch("http://localhost:3001/add/vacation", {
+      const res = await fetch(`${config.general.SERVER_URL}/add/vacation`, {
         method: "POST",
         mode: "cors",
         credentials: "include",
         body: formData,
       });
       const resJson = await res.json();
-      console.log(resJson);
       if (resJson.success === true) {
         alert("Vacation added!");
         history.push("/vacations/admin");
@@ -60,7 +55,7 @@ function AddVacationAdmin() {
   };
 
   const handleVerify = async () => {
-    const res = await fetch("http://localhost:3001/auth/admin/verify", {
+    const res = await fetch(`${config.general.SERVER_URL}/auth/admin/verify`, {
       method: "GET",
       mode: "cors",
       credentials: "include",

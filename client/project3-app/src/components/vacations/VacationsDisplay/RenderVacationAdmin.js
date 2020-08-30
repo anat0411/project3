@@ -1,8 +1,12 @@
-import React, { Component, Redirect } from "react";
-import { useHistory } from "react-router-dom";
+//React
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
+
+//Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
+
+//config
 import config from "../../../config";
 
 export default class RenderVacationAdmin extends Component {
@@ -13,7 +17,6 @@ export default class RenderVacationAdmin extends Component {
         mode: "cors",
         credentials: "include",
       });
-      console.log(res);
       if (res.status === 200) {
         alert("Vacation Deleted!");
         // history.push("/vacations/admin");
@@ -34,7 +37,7 @@ export default class RenderVacationAdmin extends Component {
       (
         <div
           key={id}
-          className="card col-md-4 mt-1 mb-1"
+          className="card col-md-4 mt-3 mb-3"
           style={{ width: "18rem" }}
         >
           <div className="row">
@@ -78,7 +81,6 @@ export default class RenderVacationAdmin extends Component {
       )
     );
 
-    console.log(this.props.data);
     const vacations = this.props.data;
     return (
       <div>

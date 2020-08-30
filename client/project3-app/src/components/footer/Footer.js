@@ -1,4 +1,7 @@
+//React
 import React from "react";
+
+//Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone, faMap, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";

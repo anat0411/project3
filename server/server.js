@@ -42,7 +42,9 @@ io.use((socket, next) => {
 });
 
 io.use((socket, next) => {
-  if (socket.request.session.user) return next();
+  console.log(socket.request.session);
+  if (socket.request.session.user || socket.request.session.admin)
+    return next();
   // next(new Error('403'));
   socket.disconnect();
 });
@@ -50,12 +52,16 @@ app.use(appSession);
 
 io.on("connection", (socket) => {
   console.log(`New client id ${socket.id} -------------`);
+  console.log(
+    "======================================",
+    socket.handshake.query.id
+  );
+  if (socket.handshake.query.id === "admin") {
+    socket.join("admin-room");
+  }
   const queryFollow = `INSERT INTO follow (userID, vacationID) VALUES (?,?)`;
   const queryUnfollow = `DELETE FROM follow WHERE vacationID=?`;
   socket.on("follow", function (data) {
-    console.log("---------------");
-    console.log(data, "           ", socket.request.session.user.id);
-    console.log("---------------");
     const { vacationId, follow } = data;
     console.log(data, "_----------------------");
     if (follow) {
@@ -66,10 +72,12 @@ io.on("connection", (socket) => {
           if (err) throw err;
         }
       );
+      socket.to("admin-room").emit("updateFollow");
     } else {
       pool.query(queryUnfollow, [vacationId], (err, results, fields) => {
         if (err) throw err;
       });
+      socket.to("admin-room").emit("updateFollow");
     }
   });
 
@@ -102,7 +110,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const isAuth = (req, res, next) => {
-  console.log(req.session);
   if (req.session.user) {
     return next();
   }
@@ -110,7 +117,6 @@ const isAuth = (req, res, next) => {
 };
 
 const isAdminAuth = (req, res, next) => {
-  console.log(req.session);
   if (req.session.admin) {
     return next();
   }
@@ -183,6 +189,32 @@ app.route("/vacations/admin").get(isAdminAuth, (req, res) => {
     }
   );
 });
+
+app.route("/admin/chart").get(isAdminAuth, (req, res) => {
+  pool.query(
+    `SELECT f.id AS followID ,f.userID as userID, v.destination AS vacationDestination
+  FROM follow AS f
+  LEFT JOIN vacations as v ON
+  f.vacationID = v.id`,
+    (err, results, fields) => {
+      if (err) throw err;
+      console.log(results);
+      res.json(results);
+    }
+  );
+});
+
+// app.route("/admin/chart").post(isAdminAuth, (req, res) => {
+//   console.log(req.body);
+//   pool.query(
+//     `UPDATE vacations SET followersNumber= ? WHERE destination=?`,
+//     [req.body],
+//     (err, results, fields) => {
+//       if (err) throw err;
+//       console.log(results);
+//     }
+//   );
+// });
 
 app.route("/login").post((req, res) => {
   const { username, password } = req.body;
@@ -396,7 +428,7 @@ app.route("/add/vacation").post(upload.single("image"), (req, res) => {
   io.emit("updateVacation", true);
 });
 
-app.route("/delete/vacation/:id").delete((req, res) => {
+app.route("/delete/vacation/:id").delete(isAdminAuth, (req, res) => {
   const id = req.params.id;
   pool.query(`DELETE FROM vacations WHERE id=?`, id, (err, results) => {
     if (err) throw err;
@@ -404,7 +436,7 @@ app.route("/delete/vacation/:id").delete((req, res) => {
     console.log(results);
     if (results) {
       res.json({ success: true });
-      res.redirect("/vacations/admin");
+      // res.redirect("/vacations/admin");
     } else {
       res.json({ success: false });
     }
@@ -412,85 +444,95 @@ app.route("/delete/vacation/:id").delete((req, res) => {
   io.emit("updateVacation", true);
 });
 
-app.route("/edit/vacation/:id").put(upload.single("image"), (req, res) => {
-  console.log("REQ------------- ", req.body);
-  const {
-    destination,
-    description,
-    fromDate,
-    toDate,
-    price,
-    followersNumber,
-  } = req.body;
-  const id = req.params.id;
-  const image = req.file;
+app
+  .route("/edit/vacation/:id")
+  .put(upload.single("image"), isAdminAuth, (req, res) => {
+    console.log("REQ------------- ", req.body);
+    const {
+      destination,
+      description,
+      fromDate,
+      toDate,
+      price,
+      followersNumber,
+    } = req.body;
+    const id = req.params.id;
+    const image = req.file;
 
-  console.log(
-    destination,
-    description,
-    fromDate,
-    toDate,
-    price,
-    followersNumber
-  );
+    console.log(
+      destination,
+      description,
+      fromDate,
+      toDate,
+      price,
+      followersNumber
+    );
 
-  if (
-    !destination ||
-    !description ||
-    !fromDate ||
-    !toDate ||
-    !price ||
-    followersNumber === undefined
-  ) {
-    return res.json({ success: false, msg: "Missing fields EDIT VACATION" });
-  }
-  if (image) {
-    pool.query(
-      `
+    if (
+      !destination ||
+      !description ||
+      !fromDate ||
+      !toDate ||
+      !price ||
+      followersNumber === undefined
+    ) {
+      return res.json({ success: false, msg: "Missing fields EDIT VACATION" });
+    }
+    if (image) {
+      pool.query(
+        `
       UPDATE vacations SET destination=? ,description=? ,fromDate=? ,toDate=? ,price=? ,followersNumber=?, image=? WHERE id=?
       `,
-      [
-        destination,
-        description,
-        fromDate,
-        toDate,
-        price,
-        followersNumber,
-        image.path,
-        id,
-      ],
-      (err, results) => {
-        if (err) throw err;
-        console.log("req ", req.body);
-        console.log("UN---------", results);
+        [
+          destination,
+          description,
+          fromDate,
+          toDate,
+          price,
+          followersNumber,
+          image.path,
+          id,
+        ],
+        (err, results) => {
+          if (err) throw err;
+          console.log("req ", req.body);
+          console.log("UN---------", results);
 
-        if (results) {
-          res.json({ success: true });
-        } else {
-          res.json({ success: false });
+          if (results) {
+            res.json({ success: true });
+          } else {
+            res.json({ success: false });
+          }
         }
-      }
-    );
-  } else {
-    pool.query(
-      `
+      );
+    } else {
+      pool.query(
+        `
       UPDATE vacations SET destination=? ,description=? ,fromDate=? ,toDate=? ,price=? ,followersNumber=? WHERE id=?
       `,
-      [destination, description, fromDate, toDate, price, followersNumber, id],
-      (err, results) => {
-        if (err) throw err;
-        console.log("req ", req.body);
-        console.log("UN---------", results);
+        [
+          destination,
+          description,
+          fromDate,
+          toDate,
+          price,
+          followersNumber,
+          id,
+        ],
+        (err, results) => {
+          if (err) throw err;
+          console.log("req ", req.body);
+          console.log("UN---------", results);
 
-        if (results) {
-          res.json({ success: true });
-        } else {
-          res.json({ success: false });
+          if (results) {
+            res.json({ success: true });
+          } else {
+            res.json({ success: false });
+          }
         }
-      }
-    );
-  }
-  io.emit("updateVacation", true);
-});
+      );
+    }
+    io.emit("updateVacation", true);
+  });
 
 http.listen(port, () => console.log(`Server running on port ${port}`));
