@@ -60,6 +60,8 @@ io.on("connection", (socket) => {
   }
   const queryFollow = `INSERT INTO follow (userID, vacationID) VALUES (?,?)`;
   const queryUnfollow = `DELETE FROM follow WHERE vacationID=?`;
+  const queryPlusOne = `UPDATE vacations SET followersNumber=followersNumber+1 WHERE id=?`;
+  const queryMinuesOne = `UPDATE vacations SET followersNumber=followersNumber-1 WHERE id=?`;
   socket.on("follow", function (data) {
     const { vacationId, follow } = data;
     console.log(data, "_----------------------");
@@ -69,6 +71,10 @@ io.on("connection", (socket) => {
         [socket.request.session.user.id, vacationId],
         (err, results, fields) => {
           if (err) throw err;
+          pool.query(queryPlusOne, [vacationId], (err2, results2, fields) => {
+            console.log("---------", queryPlusOne);
+            if (err2) throw err2;
+          });
         }
       );
 
@@ -76,6 +82,9 @@ io.on("connection", (socket) => {
     } else {
       pool.query(queryUnfollow, [vacationId], (err, results, fields) => {
         if (err) throw err;
+        pool.query(queryMinuesOne, [vacationId], (err2, results2, fields) => {
+          if (err2) throw err2;
+        });
       });
       socket.to("admin-room").emit("updateFollow");
     }
@@ -418,16 +427,26 @@ app.route("/add/vacation").post(upload.single("image"), (req, res) => {
 
 app.route("/delete/vacation/:id").delete(isAdminAuth, (req, res) => {
   const id = req.params.id;
-  pool.query(`DELETE FROM vacations WHERE id=?`, id, (err, results) => {
+  pool.query(` DELETE FROM vacations where id=? `, id, (err, results) => {
     if (err) throw err;
     console.log(req.params.id);
     console.log(results);
     if (results) {
       res.json({ success: true });
+      pool.query(
+        ` DELETE FROM follow where vacationID=? `,
+        id,
+        (err, results) => {
+          if (err) throw err;
+          console.log(req.params.id);
+          console.log(results);
+        }
+      );
     } else {
       res.json({ success: false });
     }
   });
+
   io.emit("updateVacation", true);
 });
 

@@ -32,17 +32,6 @@ function AdminChart() {
         else followDataSorted[key] = 1;
       });
       setFollowDataSorted(followDataSorted);
-      //   const result = await fetch("http://localhost:3001/admin/chart", {
-      //     method: "POST",
-      //     mode: "cors",
-      //     credentials: "include",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(Object(followDataSorted)),
-      //   });
-      //   const dataForFollowersNum = await result.json();
-      //   console.log(dataForFollowersNum);
     }
   };
 

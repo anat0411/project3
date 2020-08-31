@@ -21,7 +21,6 @@ export default class RenderVacationAdmin extends Component {
       if (res.status === 200) {
         alert("Vacation Deleted!");
         onDeleteVacation(id);
-        // history.push("/vacations/admin");
       }
     };
 
