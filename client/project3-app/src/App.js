@@ -1,12 +1,13 @@
+//React
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
+
 //Pages
 import MainPage from "./components/mainpage/MainPage";
 import Login from "./components/login/Login";
 import LoginAdmin from "./components/login/LoginAdmin";
 import Register from "./components/register/Register";
-import RegisterAdmin from "./components/register/RegisterAdmin";
 import Vacations from "./components/vacations/VacationsDisplay/Vacations";
 import VacationsAdmin from "./components/vacations/VacationsDisplay/VacationsAdmin";
 import AddVacationAdmin from "./components/vacations/VacationsEdits/AddVacationAdmin";
@@ -42,9 +43,6 @@ class App extends Component {
               <Route exact path="/register">
                 <Register />
               </Route>
-              {/* <Route path="/register/admin">
-            <RegisterAdmin />
-          </Route> */}
               <Route exact path="/vacations">
                 <Vacations />
               </Route>

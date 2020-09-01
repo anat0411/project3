@@ -13,11 +13,14 @@ function EditVacationAdmin() {
   const fileInputRef = useRef();
 
   const getVacation = async () => {
-    const res = await fetch(`${config.general.SERVER_URL}/${id}`, {
-      method: "GET",
-      mode: "cors",
-      credentials: "include",
-    });
+    const res = await fetch(
+      `${config.general.SERVER_URL}/get/vacation/edit/${id}`,
+      {
+        method: "GET",
+        mode: "cors",
+        credentials: "include",
+      }
+    );
     if (res.status === 403) {
       history.push("/login/admin");
     } else {
@@ -151,7 +154,7 @@ function EditVacationAdmin() {
                 />
               </div>
               <div className="mt-1 mb-1">
-                <label htmlFor="image">IF BBBBB </label>
+                <label htmlFor="image"></label>
                 <input
                   className="btn btn-outline-dark"
                   type="file"
